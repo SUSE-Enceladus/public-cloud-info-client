@@ -51,7 +51,7 @@ if __name__ == '__main__':
         package_dir={
             '': 'lib',
         },
-        scripts=['bin/pint', 'bin/awscsvgen'],
+        scripts=['bin/pint'],
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',

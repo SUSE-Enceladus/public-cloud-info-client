@@ -10,6 +10,7 @@ install:
 script:
   - make pep8
   - make test
+  - make coverage
 deploy:
   provider: pypi
   user: "suse-pub-cloud-dev"

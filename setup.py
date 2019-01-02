@@ -35,6 +35,9 @@ sys.path.insert(0, mod_path)
 import version
 src_version = version.VERSION
 
+with open('requirements-dev.txt') as req_file:
+    dev_requirements = req_file.read().splitlines()
+
 description = 'Command-line tool to access SUSE Public Cloud Information '
 description += 'Service'
 
@@ -47,6 +50,9 @@ if __name__ == '__main__':
         author='SUSE Public Cloud Team',
         author_email='public-cloud-dev@susecloud.net',
         version=src_version,
+        extras_require={
+            'dev': dev_requirements
+        },
         packages=setuptools.find_packages('lib'),
         package_dir={
             '': 'lib',

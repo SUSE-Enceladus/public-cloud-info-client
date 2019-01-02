@@ -51,5 +51,20 @@ if __name__ == '__main__':
         package_dir={
             '': 'lib',
         },
-        scripts=['bin/pint', 'bin/awscsvgen']
+        scripts=['bin/pint', 'bin/awscsvgen'],
+        classifiers=[
+            'Development Status :: 5 - Production/Stable',
+            'Intended Audience :: Developers',
+            'Natural Language :: English',
+            'License :: OSI Approved :: '
+            'GNU General Public License v3 or later (GPLv3+)',
+            'Programming Language :: Python',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: Implementation :: CPython',
+            'Programming Language :: Python :: Implementation :: PyPy',
+        ]
     )

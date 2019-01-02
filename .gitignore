@@ -1,0 +1,21 @@
+### Python ###
+*.py[cod]
+__pycache__/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+include/
+eggs/
+lib64
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test
+.cache

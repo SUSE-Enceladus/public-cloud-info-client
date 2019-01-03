@@ -33,7 +33,7 @@ install:
 	gzip "$(DESTDIR)"/"$(MANDIR)"/man1/pint.1
 
 pep8:
-	tools/run-pep8
+	tools/run-pycodestyle
 
 test:
 	nosetests --with-coverage --cover-erase --cover-package=lib.susepubliccloudinfoclient --cover-xml

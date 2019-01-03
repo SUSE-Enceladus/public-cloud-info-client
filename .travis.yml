@@ -1,0 +1,20 @@
+language: python
+dist: xenial
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+install:
+  - pip install -e .[dev]
+script:
+  - make pep8
+  - make test
+  - make coverage
+deploy:
+  provider: pypi
+  user: "suse-pub-cloud-dev"
+  password: $PYPI_PASS
+  on:
+    tags: true
+  skip_existing: true

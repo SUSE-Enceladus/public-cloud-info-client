@@ -406,17 +406,15 @@ def test_filter_regex():
         'name',
         'suse-sles-12-v[0-9]*-hvm-.*'
     )
-    expected = [
-          {
-            'deletedon': '',
-            'deprecatedon': '',
-            'id': 'ami-b95b4ffc',
-            'name': 'suse-sles-12-v20141023-hvm-ssd-x86_64',
-            'publishedon': '20141023',
-            'region': 'us-west-1',
-            'replacementid': '',
-            'replacementname': '',
-            'state': 'active'
-          }
-    ]
+    expected = [{
+        'deletedon': '',
+        'deprecatedon': '',
+        'id': 'ami-b95b4ffc',
+        'name': 'suse-sles-12-v20141023-hvm-ssd-x86_64',
+        'publishedon': '20141023',
+        'region': 'us-west-1',
+        'replacementid': '',
+        'replacementname': '',
+        'state': 'active'
+    }]
     assert_equals(expected, filtered_result)

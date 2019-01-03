@@ -34,7 +34,7 @@ def test_warn_includes_warning():
     assert('Warning:' in out.getvalue())
 
 
-@raises(SystemExit)
+@raises(LookupError)
 def test_errr_includes_error():
     """The point of error is to say so"""
     out = StringIO()

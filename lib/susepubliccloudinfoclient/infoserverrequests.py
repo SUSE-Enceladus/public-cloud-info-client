@@ -191,7 +191,7 @@ def __get_data(url):
         )
     except requests.exceptions.ConnectionError as e:
         __error(
-            "There was a problem connecting to the server. " +
+            "There was a problem connecting to the server. "
             "Please check your network connection.\n%s" % e
         )
     except requests.exceptions.RequestException as e:
@@ -210,23 +210,23 @@ def __parse_command_arg_filter(command_arg_filter=None):
     """Break down the --filter argument into a list of filters"""
     valid_filters = {
         'id':
-            '^(?P<attr>id)(?P<operator>[=])(?P<value>.+)$',
+            r'^(?P<attr>id)(?P<operator>[=])(?P<value>.+)$',
         'replacementid':
-            '^(?P<attr>replacementid)(?P<operator>[=])(?P<value>.+)$',
+            r'^(?P<attr>replacementid)(?P<operator>[=])(?P<value>.+)$',
         'ip':
-            '^(?P<attr>ip)(?P<operator>[=])(?P<value>\d+\.\d+\.\d+.\d+)$',
+            r'^(?P<attr>ip)(?P<operator>[=])(?P<value>\d+\.\d+\.\d+.\d+)$',
         'name':
-            '^(?P<attr>name)(?P<operator>[~!%])(?P<value>.+)$',
+            r'^(?P<attr>name)(?P<operator>[~!%])(?P<value>.+)$',
         'replacementname':
-            '(?P<attr>replacementname)(?P<operator>[~!%])(?P<value>.+)$',
+            r'(?P<attr>replacementname)(?P<operator>[~!%])(?P<value>.+)$',
         'publishedon':
-            '(?P<attr>publishedon)(?P<operator>[<=>])(?P<value>\d+)$',
+            r'(?P<attr>publishedon)(?P<operator>[<=>])(?P<value>\d+)$',
         'deprecatedon':
-            '(?P<attr>deprecatedon)(?P<operator>[<=>])(?P<value>\d+)$',
+            r'(?P<attr>deprecatedon)(?P<operator>[<=>])(?P<value>\d+)$',
         'deletedon':
-            '(?P<attr>deletedon)(?P<operator>[<=>])(?P<value>\d+)$',
+            r'(?P<attr>deletedon)(?P<operator>[<=>])(?P<value>\d+)$',
         'type':
-            '^(?P<attr>type)(?P<operator>[~!%])(?P<value>.+)$',
+            r'^(?P<attr>type)(?P<operator>[~!%])(?P<value>.+)$',
     }
     # start with empty result set
     filters = []

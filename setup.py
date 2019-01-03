@@ -35,6 +35,9 @@ sys.path.insert(0, mod_path)
 import version
 src_version = version.VERSION
 
+with open('README.md') as readme_file:
+    readme = readme_file.read()
+
 with open('requirements-dev.txt') as req_file:
     dev_requirements = req_file.read().splitlines()
 
@@ -45,7 +48,9 @@ if __name__ == '__main__':
     setuptools.setup(
         name='susepubliccloudinfo',
         description=(description),
-        url='https://github.com/SUSE/Enceladus',
+        long_description=readme,
+        long_description_content_type="text/markdown",
+        url='https://github.com/SUSE-Enceladus/public-cloud-info-client',
         license='GPL-3.0+',
         author='SUSE Public Cloud Team',
         author_email='public-cloud-dev@susecloud.net',

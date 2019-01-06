@@ -8,9 +8,8 @@ python:
 install:
   - pip install -e .[dev]
 script:
-  - make pep8
-  - make test
-  - make coverage
+  - pycodestyle -v --statistics --exclude=setup.py
+  - nosetests --with-coverage --cover-erase --cover-package=lib.susepubliccloudinfoclient --cover-xml
 deploy:
   provider: pypi
   user: "suse-pub-cloud-dev"

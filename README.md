@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/SUSE-Enceladus/public-cloud-info-client.svg?branch=master)](https://travis-ci.com/SUSE-Enceladus/public-cloud-info-client)
+
 pint
 ====
 

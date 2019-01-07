@@ -23,7 +23,7 @@ Release:        1
 Summary:        Query SUSE Public Cloud Info Service
 License:        GPL-3.0+
 Group:          System/Management
-Url:            https://github.com/SUSE/Enceladus
+Url:            https://github.com/SUSE-Enceladus/public-cloud-info-client
 Source0:        %{upstream_name}-%{version}.tar.bz2
 Requires:       python3
 Requires:       python3-docopt

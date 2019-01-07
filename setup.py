@@ -38,8 +38,11 @@ src_version = version.VERSION
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
+with open('requirements.txt') as req_file:
+    requirements = req_file.read().splitlines()
+
 with open('requirements-dev.txt') as req_file:
-    dev_requirements = req_file.read().splitlines()
+    dev_requirements = req_file.read().splitlines()[2:]
 
 description = 'Command-line tool to access SUSE Public Cloud Information '
 description += 'Service'
@@ -55,6 +58,7 @@ if __name__ == '__main__':
         author='SUSE Public Cloud Team',
         author_email='public-cloud-dev@susecloud.net',
         version=src_version,
+        install_requires=requirements,
         extras_require={
             'dev': dev_requirements
         },

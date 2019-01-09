@@ -63,6 +63,18 @@ def test_form_url_images_active_region_json():
     assert_equals(expected, url)
 
 
+def test_form_url_images_inactive():
+    """Form URL for inactive images (defaults to JSON)"""
+    url = ifsrequest.__form_url(
+        'microsoft',
+        'images',
+        image_state='inactive')
+    expected = (
+        'https://susepubliccloudinfo.suse.com/v1/'
+        'microsoft/images/inactive.json')
+    assert_equals(expected, url)
+
+
 def test_form_url_images_all_xml():
     """Form URL for all images in XML format"""
     url = ifsrequest.__form_url('google', 'images')

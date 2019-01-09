@@ -26,7 +26,7 @@ usage: pint -h | --help
           [ --region=<region> ]
           [ --smt | --regionserver ]
        pint (amazon|google|microsoft) images
-          [ --active | --deleted | --deprecated ]
+          [ --active | --inactive | --deleted | --deprecated ]
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
@@ -35,8 +35,18 @@ usage: pint -h | --help
 options:
    -h --help
        Show help
+   --active
+       Only include images which are actively maintained
+   --deleted
+       Only include images which have been deleted
+   --deprecated
+       Only include images which are deprecated
+       (scheduled for deletion in 6 months)
    --filter=<filter>
        Comma separated list of available attributes
+   --inactive
+       Only include images which are inactive
+       (only receiving critical updates, but not yet deprecated)
    --json
        Output data in JSON format
    --region=<region>
@@ -69,7 +79,7 @@ for csp in cloud_providers:
         break
 
 image_state = None
-image_states = ('active', 'deleted', 'deprecated')
+image_states = ('active', 'inactive', 'deleted', 'deprecated')
 for state in image_states:
     if command_args['--%s' % state]:
         image_state = state

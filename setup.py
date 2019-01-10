@@ -58,6 +58,7 @@ if __name__ == '__main__':
         author='SUSE Public Cloud Team',
         author_email='public-cloud-dev@susecloud.net',
         version=src_version,
+        include_package_data=True,
         install_requires=requirements,
         extras_require={
             'dev': dev_requirements
@@ -66,7 +67,7 @@ if __name__ == '__main__':
         package_dir={
             '': 'lib',
         },
-        scripts=['bin/pint', 'bin/awscsvgen'],
+        scripts=['bin/pint'],
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',

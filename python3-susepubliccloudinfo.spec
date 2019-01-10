@@ -39,17 +39,6 @@ Obsoletes:      python-susepubliccloudinfo < %{version}
 %description
 Query the SUSE Public Cloud Information Service REST API
 
-%package amazon
-Summary:        Generate Amazon specific information
-Group:          System/Management
-PreReq:         python3-susepubliccloudinfo = %version
-Requires:       python3-boto
-Requires:       python3-lxml
-
-%description amazon
-Script that generates information for Amazon to automate image inclusion
-in the quick launcher and the Support matrix on the AWS web pages.
-
 %prep
 %setup -q -n %{upstream_name}-%{version}
 
@@ -64,14 +53,10 @@ gzip %{buildroot}/%{_mandir}/man1/pint.1
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%license LICENSE
 %{_mandir}/man1/*
 %dir %{python3_sitelib}/susepubliccloudinfoclient
 %{python3_sitelib}/*
 %{_bindir}/pint
-
-%files amazon
-%defattr(-,root,root,-)
-%{_bindir}/awscsvgen
 
 %changelog

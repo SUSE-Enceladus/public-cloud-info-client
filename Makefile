@@ -3,7 +3,7 @@ MANPATH=/usr/share/man
 PREFIX=/usr
 NAME=susepubliccloudinfo
 dirs = bin lib man
-files = Makefile README.md LICENSE setup.py
+files = Makefile README.md LICENSE setup.py requirements-dev.txt requirements.txt setup.cfg
 
 .PHONY: clean tar install pep8 test coverage list_tests
 

@@ -15,7 +15,6 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-
 %define upstream_name susepubliccloudinfo
 Name:           python3-susepubliccloudinfo
 Version:        1.1.0
@@ -39,6 +38,7 @@ Obsoletes:      python-susepubliccloudinfo < %{version}
 %description
 Query the SUSE Public Cloud Information Service REST API
 
+%if 0%{?suse_version} > 1320
 %package amazon
 Summary:        Generate Amazon specific information
 Group:          System/Management
@@ -49,6 +49,7 @@ Requires:       python3-lxml
 %description amazon
 Script that generates information for Amazon to automate image inclusion
 in the quick launcher and the Support matrix on the AWS web pages.
+%endif
 
 %prep
 %setup -q -n %{upstream_name}-%{version}
@@ -64,14 +65,18 @@ gzip %{buildroot}/%{_mandir}/man1/pint.1
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%license LICENSE
 %{_mandir}/man1/*
 %dir %{python3_sitelib}/susepubliccloudinfoclient
 %{python3_sitelib}/*
 %{_bindir}/pint
 
+%if 0%{?suse_version} > 1320
 %files amazon
 %defattr(-,root,root,-)
 %{_bindir}/awscsvgen
+%else
+%exclude %{_bindir}/awscsvgen
+%endif
 
 %changelog

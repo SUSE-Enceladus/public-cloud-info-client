@@ -1,5 +1,6 @@
 -r requirements.txt
 
+bumpversion
 coverage
 pycodestyle
 nose

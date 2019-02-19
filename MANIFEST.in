@@ -1,2 +1,6 @@
 include LICENSE
+include README.md
+include requirements.txt
+include requirements-dev.txt
+
 recursive-include man *

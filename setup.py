@@ -62,6 +62,7 @@ if __name__ == '__main__':
         extras_require={
             'dev': dev_requirements
         },
+        include_package_data=True,
         packages=setuptools.find_packages('lib'),
         package_dir={
             '': 'lib',

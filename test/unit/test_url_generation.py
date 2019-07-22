@@ -91,3 +91,15 @@ def test_region_is_url_quoted():
         '/v1/microsoft/West%20US/images.json'
     )
     assert_equals(expected, url)
+
+
+def test_all_frameworks():
+    """As new frameworks are added, we smoketest the values"""
+    frameworks = ['amazon', 'google', 'microsoft', 'oracle']
+    for framework in frameworks:
+        url = ifsrequest.__form_url(framework, 'images', region='dummy')
+        expected = (
+            'https://susepubliccloudinfo.suse.com'
+            '/v1/' + framework + '/dummy/images.json'
+        )
+        assert_equals(expected, url)

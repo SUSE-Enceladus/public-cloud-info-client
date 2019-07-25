@@ -5,7 +5,7 @@
 .SH NAME
 pint \- Public-cloud INformation Tracker
 .SH SYNOPSIS
-.B pint amazon|google|microsoft images|servers [options]
+.B pint amazon|google|microsoft|oracle images|servers [options]
 .SH DESCRIPTION
 .B pint
 A client for the SUSE Public Cloud Information service at
@@ -42,9 +42,10 @@ capabilities.
 .IP "<framework>"
 One of the supported cloud frameworks,
 .IR amazon ,
-.IR google
+.IR google,
+.IR microsoft
 or
-.IR microsoft .
+.IR oracle .
 The
 .I <framework>
 argument specifies for which cloud provider the information should be retrieved.

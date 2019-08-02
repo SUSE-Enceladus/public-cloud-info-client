@@ -1,7 +1,7 @@
 #
-# spec file for package python3-susepubcloudinfo
+# spec file for package python3-susepubliccloudinfo
 #
-# Copyright (c) 2017 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2019 SUSE LINUX GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -12,7 +12,7 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
+# Please submit bugfixes or comments via https://bugs.opensuse.org/
 #
 
 
@@ -21,7 +21,7 @@ Name:           python3-susepubliccloudinfo
 Version:        1.2.0
 Release:        0
 Summary:        Query SUSE Public Cloud Info Service
-License:        GPL-3.0+
+License:        GPL-3.0-or-later
 Group:          System/Management
 Url:            https://github.com/SUSE-Enceladus/public-cloud-info-client
 Source0:        %{upstream_name}-%{version}.tar.bz2

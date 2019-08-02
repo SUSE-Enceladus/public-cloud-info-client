@@ -20,12 +20,12 @@
 #
 """
 usage: pint -h | --help
-       pint (amazon|google|microsoft|oracle) servers
+       pint (amazon|google|microsoft) servers
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
           [ --smt | --regionserver ]
-       pint (amazon|google|microsoft) images
+       pint (amazon|google|microsoft|oracle) images
           [ --active | --inactive | --deleted | --deprecated ]
           [ --filter=<filter> ]
           [ --json | --xml ]

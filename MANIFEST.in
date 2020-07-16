@@ -4,3 +4,4 @@ include requirements.txt
 include requirements-dev.txt
 
 recursive-include man *
+recursive-include bin *

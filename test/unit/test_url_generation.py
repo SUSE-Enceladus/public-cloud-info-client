@@ -103,3 +103,45 @@ def test_all_frameworks():
             '/v1/' + framework + '/dummy/images.json'
         )
         assert_equals(expected, url)
+
+
+def test_form_url_providers_xml():
+    """Form the URL for all providers in XML"""
+    url = ifsrequest.__form_url('', 'providers')
+    # all requests are in JSON, regardless of output format
+    expected = (
+        'https://susepubliccloudinfo.suse.com'
+        '/v1/providers.json'
+    )
+    assert_equals(expected, url)
+
+
+def test_form_url_images_states():
+    """Form URL for image states (defaults to JSON)"""
+    url = ifsrequest.__form_url('', 'states')
+    expected = (
+        'https://susepubliccloudinfo.suse.com/v1/'
+        'images/states.json')
+    assert_equals(expected, url)
+
+
+def test_form_url_servers_types():
+    """Form URL for servers types (defaults to JSON)"""
+    url = ifsrequest.__form_url(
+        'microsoft',
+        'types')
+    expected = (
+        'https://susepubliccloudinfo.suse.com/v1/'
+        'microsoft/servers/types.json')
+    assert_equals(expected, url)
+
+
+def test_form_url_regions():
+    """Form URL for regions list (defaults to JSON)"""
+    url = ifsrequest.__form_url(
+        'amazon',
+        'regions')
+    expected = (
+        'https://susepubliccloudinfo.suse.com/v1/'
+        'amazon/regions.json')
+    assert_equals(expected, url)

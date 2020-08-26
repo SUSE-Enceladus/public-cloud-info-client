@@ -20,12 +20,21 @@
 #
 """
 usage: pint -h | --help
-       pint (amazon|google|microsoft) servers
+       pint providers
+          [ --json | --xml ]
+       pint image_states
+          [ --json | --xml ]
+       pint ({PROVIDERS}) server_types 
+          [ --json | --xml ]
+       pint ({PROVIDERS}) regions
+          [ --filter=<filter> ]
+          [ --json | --xml ]
+       pint ({PROVIDERS}) servers
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
           [ --smt | --regionserver ]
-       pint (amazon|google|microsoft|oracle) images
+       pint ({PROVIDERS}) images
           [ --active | --inactive | --deleted | --deprecated ]
           [ --filter=<filter> ]
           [ --json | --xml ]
@@ -63,16 +72,22 @@ options:
 """
 
 import sys
+import json
 
 from docopt import docopt
 
 import susepubliccloudinfoclient.infoserverrequests as ifsrequest
 import susepubliccloudinfoclient.version as version
 
-command_args = docopt(__doc__, version=version.VERSION)
+provider_data = ifsrequest.get_provider_data(None, None, 'json', 'all', None)
+providers = json.loads(provider_data)
+cloud_providers = []
+for provider in providers['providers']:
+    cloud_providers.append(provider['name'])
+
+command_args = docopt(__doc__.format(PROVIDERS = "|".join(cloud_providers)), version=version.VERSION)
 
 framework = None
-cloud_providers = ['amazon', 'google', 'microsoft', 'oracle']
 for csp in cloud_providers:
     if command_args[csp]:
         framework = csp
@@ -111,8 +126,36 @@ try:
             output_format,
             region,
             command_args['--filter']))
-    else:
+    elif command_args['servers']:
         print(ifsrequest.get_server_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    elif command_args['providers']:
+        print(ifsrequest.get_provider_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    elif command_args['image_states']:
+        print(ifsrequest.get_image_states_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    elif command_args['server_types']:
+        print(ifsrequest.get_server_types_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    else:
+        print(ifsrequest.get_regions_data(
             framework,
             server_type,
             output_format,

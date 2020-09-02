@@ -151,12 +151,18 @@ def __form_url(
     url_components = []
     url_components.append(__get_base_url())
     url_components.append(__get_api_version())
-    url_components.append(framework)
+    if framework:
+        url_components.append(framework)
     if region == 'all':
         region = None
     if region:
         url_components.append(urllib.parse.quote(region))
-    url_components.append(info_type)
+    if info_type == 'states':
+        url_components.append('images/states')
+    elif info_type == 'types':
+        url_components.append('servers/types')
+    else:
+        url_components.append(info_type)
     doc_type = image_state or server_type
     if doc_type:
         url_components.append(doc_type)
@@ -202,7 +208,11 @@ def __get_data(url):
 
 
 def __inflect(plural):
-    inflections = {'images': 'image', 'servers': 'server'}
+    inflections = {
+        'images': 'image', 'servers': 'server',
+        'providers': 'provider', 'states': 'state', 'types': 'type',
+        'regions': 'region'
+    }
     return inflections[plural]
 
 
@@ -291,6 +301,82 @@ def __process(url, info_type, command_arg_filter, result_format):
         filters = __parse_command_arg_filter(command_arg_filter)
         resultset = __apply_filters(resultset, filters)
     return __reformat(resultset, info_type, result_format)
+
+
+def get_provider_data(
+        framework,
+        type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None):
+    """Return the requested providers information"""
+    info_type = 'providers'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        type,
+        apply_filters=command_arg_filter
+    )
+    return __process(url, info_type, command_arg_filter, result_format)
+
+
+def get_image_states_data(
+        framework,
+        type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None):
+    """Return the requested image states information"""
+    info_type = 'states'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        type,
+        apply_filters=command_arg_filter
+    )
+    return __process(url, info_type, command_arg_filter, result_format)
+
+
+def get_server_types_data(
+        framework,
+        type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None):
+    """Return the requested server types information"""
+    info_type = 'types'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        type,
+        apply_filters=command_arg_filter
+    )
+    return __process(url, info_type, command_arg_filter, result_format)
+
+
+def get_regions_data(
+        framework,
+        type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None):
+    """Return the requested regions information"""
+    info_type = 'regions'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        type,
+        apply_filters=command_arg_filter
+    )
+    return __process(url, info_type, command_arg_filter, result_format)
 
 
 def get_image_data(

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Copyright (c) 2018 SUSE Linux GmbH.  All rights reserved.
+# Copyright (c) 2020 SUSE Linux GmbH.  All rights reserved.
 #
 # This file is part of susePublicCloudInfoClient
 #
@@ -71,21 +71,37 @@ options:
        Show program version
 """
 
-import sys
 import json
+import sys
 
 from docopt import docopt
 
 import susepubliccloudinfoclient.infoserverrequests as ifsrequest
 import susepubliccloudinfoclient.version as version
 
-provider_data = ifsrequest.get_provider_data(None, None, 'json', 'all', None)
-providers = json.loads(provider_data)
+try:
+    provider_data = ifsrequest.get_provider_data(
+        None, None, 'json', 'all', None
+    )
+except Exception:
+    print('Unable to contact pint server')
+    sys.exit(1)
+try:
+    providers = json.loads(provider_data)
+except json.decoder.JSONDecodeError:
+    print('Unable to load supported frameworks from server')
+    print('Received: "%s"' % provider_data)
+
 cloud_providers = []
 for provider in providers['providers']:
     cloud_providers.append(provider['name'])
 
-command_args = docopt(__doc__.format(PROVIDERS = "|".join(cloud_providers)), version=version.VERSION)
+command_args = docopt(
+    __doc__.format(
+        PROVIDERS = "|".join(cloud_providers)
+    ),
+    version=version.VERSION
+)
 
 framework = None
 for csp in cloud_providers:
@@ -94,7 +110,19 @@ for csp in cloud_providers:
         break
 
 image_state = None
-image_states = ('active', 'inactive', 'deleted', 'deprecated')
+image_states_data = ifsrequest.get_image_states_data(
+    None, None, 'json', None
+)
+try:
+    image_state_info = json.loads(image_states_data)
+except json.decoder.JSONDecodeError:
+    print('Unable to load image state data from server')
+    print('Received: "%s"' % image_states_data)
+    sys.exit(1)
+image_states = []
+for possible_image_state in image_state_info.get('states'):
+    image_states.append(possible_image_state.get('name'))
+
 for state in image_states:
     if command_args['--%s' % state]:
         image_state = state

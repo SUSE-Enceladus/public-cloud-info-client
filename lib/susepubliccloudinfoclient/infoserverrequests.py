@@ -262,6 +262,9 @@ def __parse_server_response_data(server_response_data, info_type):
 
 
 def __reformat(items, info_type, result_format):
+    if not items:
+        no_info_msg = "No information available. Please check your filter"
+        return no_info_msg
     if result_format == 'json':
         return json.dumps(
             {info_type: items},
@@ -297,6 +300,11 @@ def __process(url, info_type, command_arg_filter, result_format):
     """
     server_response_data = __get_data(url)
     resultset = __parse_server_response_data(server_response_data, info_type)
+    if info_type == 'regions':
+        if not resultset:
+            no_region_msg = "No region information available. Images have " \
+                            "the same identifier in all regions"
+            return no_region_msg
     if command_arg_filter:
         filters = __parse_command_arg_filter(command_arg_filter)
         resultset = __apply_filters(resultset, filters)

@@ -11,7 +11,7 @@ script:
   - nosetests --with-coverage --cover-erase --cover-package=lib.susepubliccloudinfoclient --cover-xml
 deploy:
   provider: pypi
-  user: "suse-pub-cloud-dev"
+  user: "__token__"
   password: $PYPI_PASS
   on:
     tags: true

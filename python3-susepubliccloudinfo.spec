@@ -30,6 +30,7 @@ Requires:       python3-docopt
 Requires:       python3-lxml
 Requires:       python3-requests
 BuildRequires:  python3-setuptools
+BuildRequires:  python-rpm-macros
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
 

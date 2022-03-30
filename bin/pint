@@ -148,12 +148,15 @@ if command_args['--region']:
 
 try:
     if command_args['images']:
-        print(ifsrequest.get_image_data(
+        data = ifsrequest.get_image_data(
             framework,
             image_state,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'])
+        if not data:
+            data = 'No information available. Please check your filter'
+        print(data)
     elif command_args['servers']:
         print(ifsrequest.get_server_data(
             framework,
@@ -183,11 +186,16 @@ try:
             region,
             command_args['--filter']))
     else:
-        print(ifsrequest.get_regions_data(
+        regions = ifsrequest.get_regions_data(
             framework,
             server_type,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'])
+        if not regions:
+            regions = ('No region information available. Images have '
+                       'the same identifier in all regions')
+        print(regions)
+            
 except Exception:
     sys.exit(1)

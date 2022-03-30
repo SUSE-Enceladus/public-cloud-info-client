@@ -24,8 +24,16 @@ from nose.tools import assert_equals
 
 
 def test_global_images_no_regions():
-    """Returns a no regions info message for global images"""
-    info_msg = "No region information available. Images have the same " \
-               "identifier in all regions"
+    """Returns empty list for no regions"""
+    region_data = '{\n  "regions": []\n}'
     result = ifsrequest.get_regions_data('oracle', None, 'json', 'all', None)
-    assert_equals(result, info_msg)
+    assert_equals(result, region_data)
+
+
+def test_images_no_data():
+    """Returns empty list for no images"""
+    image_data = '{\n  "images": []\n}'
+    result = ifsrequest.get_image_data(
+        'amazon', None, 'json', 'us-east-1', 'name~foo'
+    )
+    assert_equals(result, image_data)

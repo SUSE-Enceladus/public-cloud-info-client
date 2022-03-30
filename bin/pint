@@ -154,7 +154,7 @@ try:
             output_format,
             region,
             command_args['--filter'])
-        if not data:
+        if '<images/>' in data or '"images": []' in data:
             data = 'No information available. Please check your filter'
         print(data)
     elif command_args['servers']:
@@ -192,7 +192,7 @@ try:
             output_format,
             region,
             command_args['--filter'])
-        if not regions:
+        if '<regions/>' in regions or '"regions": []' in regions:
             regions = ('No region information available. Images have '
                        'the same identifier in all regions')
         print(regions)

@@ -69,6 +69,8 @@ options:
        Output data in XML format
    -v --version
        Show program version
+
+For Additional help run `man pint` to view the man page       
 """
 
 import json

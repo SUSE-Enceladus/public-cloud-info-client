@@ -173,12 +173,16 @@ try:
             print(data)
 
     elif command_args['servers']:
-        print(ifsrequest.get_server_data(
-            framework,
-            server_type,
-            output_format,
-            region,
-            command_args['--filter']))
+        for reg in region.split(','):
+            print(
+                ifsrequest.get_server_data(
+                    framework,
+                    server_type,
+                    output_format,
+                    reg,
+                    command_args['--filter']
+                )
+            )
     elif command_args['providers']:
         print(ifsrequest.get_provider_data(
             framework,

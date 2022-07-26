@@ -178,14 +178,17 @@ def __get_api_version():
 
 def __get_base_url():
     """Return the base url for the information service"""
-    return 'https://susepubliccloudinfo.suse.com'
+    return 'http://localhost:5000'
+    # return 'https://susepubliccloudinfo.suse.com'
     # return 'http://localhost:9292'
 
 
 def __get_data(url):
     """Make the request and return the data or None in case of failure"""
     try:
-        response = requests.get(url)
+        headers = {'Accept-Encoding': 'deflate, gzip'}
+        response = requests.get(url, headers=headers)
+        print(response.headers)
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         __error("The server responded with an error.\n%s" % e)

@@ -150,7 +150,8 @@ if command_args['--region']:
 
 try:
     if command_args['images']:
-        no_info_regions = []
+        info = False
+        no_info = ''
         for reg in region.split(','):
             data = ifsrequest.get_image_data(
                 framework,
@@ -160,17 +161,19 @@ try:
                 command_args['--filter']
             )
             if '<images/>' in data or '"images": []' in data:
-                no_info_regions.append(reg)
-            else:
-                print(data)
+                no_info += data
+                continue
 
-        if no_info_regions:
-            no_info_regions = (', ').join(no_info_regions)
-            data = "No information available for {} regions.".format(
-                no_info_regions
-            )
-            data += " Please check your filter"
+            info = True
+            # there is info in some region/s
+            # so we show the empty response/s
+            # and not the message
+            print(no_info)
             print(data)
+            no_info = ''
+
+        if not info:
+            print("No information available. Please check your filter")
 
     elif command_args['servers']:
         for reg in region.split(','):

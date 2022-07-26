@@ -176,16 +176,31 @@ try:
             print("No information available. Please check your filter")
 
     elif command_args['servers']:
+        info = False
+        no_info = ''
         for reg in region.split(','):
-            print(
-                ifsrequest.get_server_data(
-                    framework,
-                    server_type,
-                    output_format,
-                    reg,
-                    command_args['--filter']
-                )
+            data = ifsrequest.get_server_data(
+                framework,
+                server_type,
+                output_format,
+                reg,
+                command_args['--filter']
             )
+            if '<servers/>' in data or '"servers": []' in data:
+                no_info += data
+                continue
+
+            info = True
+            # there is info in some region/s
+            # so we show the empty response/s
+            # and not the message
+            print(no_info)
+            print(data)
+            no_info = ''
+
+        if not info:
+            print("No information available. Please check your filter")
+
     elif command_args['providers']:
         print(ifsrequest.get_provider_data(
             framework,

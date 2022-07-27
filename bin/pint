@@ -160,7 +160,7 @@ try:
                 framework,
                 image_state,
                 output_format,
-                reg,
+                reg.strip(),
                 command_args['--filter']
             )
             if '<images/>' in data or '"images": []' in data:
@@ -204,7 +204,7 @@ try:
                 framework,
                 server_type,
                 output_format,
-                reg,
+                reg.strip(),
                 command_args['--filter']
             )
             if '<servers/>' in data or '"servers": []' in data:

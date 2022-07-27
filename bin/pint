@@ -213,7 +213,7 @@ try:
             if 'json' in output_format:
                 data = json.loads(data)
                 data_json['servers'] += data.get('servers')
-            elif 'xml' in output_format:
+            elif output_format in ['xml', 'plain']:
                 data = etree.fromstring(data.encode('utf-8'))
                 data_xml.extend(data)
 
@@ -224,7 +224,7 @@ try:
                 indent=2,
                 separators=(',', ':')
             ))
-        elif 'xml' in output_format:
+        elif output_format in ['xml', 'plain']:
             print(etree.tostring(
                 data_xml,
                 xml_declaration=True,

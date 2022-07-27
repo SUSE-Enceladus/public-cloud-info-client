@@ -165,6 +165,7 @@ try:
             )
             if '<images/>' in data or '"images": []' in data:
                 info = False
+                continue
 
             info = True
             # there is info in some region/s
@@ -193,10 +194,11 @@ try:
         else:
             print(data)
 
-
     elif command_args['servers']:
         info = False
         no_info = ''
+        data_json = {}
+        data_xml = None
         for reg in region.split(','):
             data = ifsrequest.get_server_data(
                 framework,
@@ -206,19 +208,36 @@ try:
                 command_args['--filter']
             )
             if '<servers/>' in data or '"servers": []' in data:
-                no_info += data
+                no_info = False
                 continue
 
             info = True
             # there is info in some region/s
             # so we show the empty response/s
             # and not the message
-            print(no_info)
-            print(data)
-            no_info = ''
+            if output_format in output_options:
+                if 'json' in output_format:
+                    data = json.loads(data)
+                    data_json['servers'] = data_json.get('servers', []) + data.get('servers')
+                    data = data_json
+                else:
+                    if data_xml is None:
+                        data_xml = etree.Element('servers')
+
+                    data = etree.fromstring(data.encode('utf-8'))
+                    data_xml.extend(data)
+                    data = etree.tostring(
+                        data_xml,
+                        xml_declaration=True,
+                        encoding='UTF-8',
+                        pretty_print=True
+                    ).decode()
 
         if not info:
             print("No information available. Please check your filter")
+        else:
+            print(data)
+
 
     elif command_args['providers']:
         print(ifsrequest.get_provider_data(

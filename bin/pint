@@ -151,10 +151,10 @@ if command_args['--region']:
 
 try:
     if command_args['images']:
-        info = False
-        no_info = ''
-        data_json = {}
-        data_xml = None
+        # in case of no results, return empty JSON
+        # instead of empty dictionary
+        data_json = {'images': []}
+        data_xml = etree.Element('images')
         for reg in region.split(','):
             data = ifsrequest.get_image_data(
                 framework,
@@ -164,41 +164,38 @@ try:
                 command_args['--filter']
             )
             if '<images/>' in data or '"images": []' in data:
-                info = False
                 continue
 
-            info = True
             # there is info in some region/s
             # so we show the empty response/s
             # and not the message
-            if output_format in output_options:
-                if 'json' in output_format:
-                    data = json.loads(data)
-                    data_json['images'] = data_json.get('images', []) + data.get('images')
-                    data = data_json
-                else:
-                    if data_xml is None:
-                        data_xml = etree.Element('images')
+            if 'json' in output_format:
+                data = json.loads(data)
+                data_json['images'] += data.get('images')
+            elif 'xml' in output_format:
+                data = etree.fromstring(data.encode('utf-8'))
+                data_xml.extend(data)
 
-                    data = etree.fromstring(data.encode('utf-8'))
-                    data_xml.extend(data)
-                    data = etree.tostring(
-                        data_xml,
-                        xml_declaration=True,
-                        encoding='UTF-8',
-                        pretty_print=True
-                    ).decode()
-
-        if not info:
-            print("No information available. Please check your filter")
-        else:
-            print(data)
+        if 'json' in output_format:
+            print(json.dumps(
+                data_json,
+                sort_keys=True,
+                indent=2,
+                separators=(',', ':')
+            ))
+        elif 'xml' in output_format:
+            print(etree.tostring(
+                data_xml,
+                xml_declaration=True,
+                encoding='UTF-8',
+                pretty_print=True
+            ).decode())
 
     elif command_args['servers']:
-        info = False
-        no_info = ''
-        data_json = {}
-        data_xml = None
+        # in case of no results, return empty JSON
+        # instead of empty dictionary
+        data_json = {'images': []}
+        data_xml = etree.Element('servers')
         for reg in region.split(','):
             data = ifsrequest.get_server_data(
                 framework,
@@ -208,35 +205,32 @@ try:
                 command_args['--filter']
             )
             if '<servers/>' in data or '"servers": []' in data:
-                no_info = False
-                continue
+                 continue
 
-            info = True
             # there is info in some region/s
             # so we show the empty response/s
             # and not the message
-            if output_format in output_options:
-                if 'json' in output_format:
-                    data = json.loads(data)
-                    data_json['servers'] = data_json.get('servers', []) + data.get('servers')
-                    data = data_json
-                else:
-                    if data_xml is None:
-                        data_xml = etree.Element('servers')
+            if 'json' in output_format:
+                data = json.loads(data)
+                data_json['servers'] += data.get('servers')
+            elif 'xml' in output_format:
+                data = etree.fromstring(data.encode('utf-8'))
+                data_xml.extend(data)
 
-                    data = etree.fromstring(data.encode('utf-8'))
-                    data_xml.extend(data)
-                    data = etree.tostring(
-                        data_xml,
-                        xml_declaration=True,
-                        encoding='UTF-8',
-                        pretty_print=True
-                    ).decode()
-
-        if not info:
-            print("No information available. Please check your filter")
-        else:
-            print(data)
+        if 'json' in output_format:
+            print(json.dumps(
+                data_json,
+                sort_keys=True,
+                indent=2,
+                separators=(',', ':')
+            ))
+        elif 'xml' in output_format:
+            print(etree.tostring(
+                data_xml,
+                xml_declaration=True,
+                encoding='UTF-8',
+                pretty_print=True
+            ).decode())
 
 
     elif command_args['providers']:

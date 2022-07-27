@@ -177,7 +177,7 @@ try:
                     data_json['images'] = data_json.get('images', []) + data.get('images')
                     data = data_json
                 else:
-                    if not data_xml:
+                    if data_xml is None:
                         data_xml = etree.Element('images')
 
                     data = etree.fromstring(data.encode('utf-8'))

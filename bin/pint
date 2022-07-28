@@ -166,13 +166,10 @@ try:
             if '<images/>' in data or '"images": []' in data:
                 continue
 
-            # there is info in some region/s
-            # so we show the empty response/s
-            # and not the message
             if 'json' in output_format:
                 data = json.loads(data)
                 data_json['images'] += data.get('images')
-            elif 'xml' in output_format:
+            elif output_format in ['xml', 'plain']:
                 data = etree.fromstring(data.encode('utf-8'))
                 data_xml.extend(data)
 
@@ -183,7 +180,7 @@ try:
                 indent=2,
                 separators=(',', ':')
             ))
-        elif 'xml' in output_format:
+        elif output_format in ['xml', 'plain']:
             print(etree.tostring(
                 data_xml,
                 xml_declaration=True,
@@ -194,7 +191,7 @@ try:
     elif command_args['servers']:
         # in case of no results, return empty JSON
         # instead of empty dictionary
-        data_json = {'images': []}
+        data_json = {'servers': []}
         data_xml = etree.Element('servers')
         for reg in region.split(','):
             data = ifsrequest.get_server_data(
@@ -207,9 +204,6 @@ try:
             if '<servers/>' in data or '"servers": []' in data:
                  continue
 
-            # there is info in some region/s
-            # so we show the empty response/s
-            # and not the message
             if 'json' in output_format:
                 data = json.loads(data)
                 data_json['servers'] += data.get('servers')

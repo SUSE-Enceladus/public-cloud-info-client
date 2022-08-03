@@ -184,8 +184,9 @@ try:
                 ).decode()
                 if data_content not in all_content_xml:
                     # add new elements only
-                    data = etree.fromstring(data_content.encode('utf-8'))
-                    data_xml.append(data)
+                    data = etree.fromstring(data.encode('utf-8'))
+                    data_xml.extend(data)
+                    etree.indent(data_xml, space=" ", level=0)
 
         if 'json' in output_format:
             print(json.dumps(

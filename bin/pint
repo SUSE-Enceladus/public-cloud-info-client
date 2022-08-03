@@ -168,10 +168,21 @@ try:
 
             if 'json' in output_format:
                 data = json.loads(data)
-                data_json['images'] += data.get('images')
+                if data.get('images')[0] not in data_json['images']:
+                    # add new elements only
+                    data_json['images'] += data.get('images')
             elif output_format in ['xml', 'plain']:
-                data = etree.fromstring(data.encode('utf-8'))
-                data_xml.extend(data)
+                data_content = data.partition("<images>")[-1][:-10].strip()
+                all_content_xml = etree.tostring(
+                    data_xml,
+                    xml_declaration=True,
+                    encoding='UTF-8',
+                    pretty_print=True
+                ).decode()
+                if data_content not in all_content_xml:
+                    # add new elements only
+                    data = etree.fromstring(data.encode('utf-8'))
+                    data_xml.extend(data)
 
         if 'json' in output_format:
             print(json.dumps(

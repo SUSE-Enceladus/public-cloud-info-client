@@ -172,7 +172,10 @@ try:
                     # add new elements only
                     data_json['images'] += data.get('images')
             elif output_format in ['xml', 'plain']:
-                data_content = data.partition("<images>")[-1][:-10].strip()
+                # get the xml image elements, the string inside <images>..</images>
+                # this is the substring starting at "<images>" and
+                # slicing the "</images> " out
+                data_content = data.partition("<images>")[-1][:-len("</images> ")].strip()
                 all_content_xml = etree.tostring(
                     data_xml,
                     xml_declaration=True,

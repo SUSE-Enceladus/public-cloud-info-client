@@ -48,3 +48,6 @@ list_tests:
 
 %.py:
 	nosetests $@
+
+venv:
+	python3 -m venv venv $$ source venv/bin/activate

@@ -384,9 +384,12 @@ def get_image_data(
         image_state,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        command_arg_date=None):
     """Return the requested image information"""
     info_type = 'images'
+    if command_arg_date:
+        command_arg_filter=f'publishedon>{command_arg_date}'
     url = __form_url(
         framework,
         info_type,

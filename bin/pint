@@ -36,7 +36,7 @@ usage: pint -h | --help
           [ --smt | --regionserver ]
        pint ({PROVIDERS}) images
           [ --active | --inactive | --deleted | --deprecated ]
-          [ --filter=<filter> ]
+          [ --filter=<filter> | --published-after=<date> ]
           [ --json | --xml ]
           [ --region=<region> ]
        pint -v | --version
@@ -51,6 +51,8 @@ options:
    --deprecated
        Only include images which are deprecated
        (scheduled for deletion in 6 months)
+   --published-after=<date>
+       Only include images published after a date string in the format yyyymmdd
    --filter=<filter>
        Comma separated list of available attributes
    --inactive
@@ -155,7 +157,8 @@ try:
             image_state,
             output_format,
             region,
-            command_args['--filter'])
+            command_args['--filter'],
+            command_args['--published-after'])
         if '<images/>' in data or '"images": []' in data:
             data = 'No information available. Please check your filter'
         print(data)

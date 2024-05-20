@@ -270,6 +270,9 @@ def __parse_command_arg_filter(command_arg_filter=None):
 
 
 def __parse_server_response_data(server_response_data, info_type):
+    if info_type == 'servers_version' or info_type == 'images_version':
+        return json.loads(server_response_data)['version']
+    
     return json.loads(server_response_data)[info_type]
 
 

@@ -24,6 +24,8 @@ import requests
 import sys
 import urllib
 from lxml import etree
+from typing import Optional, Dict, Any, List, Union
+
 
 
 def __apply_filters(superset, filters):
@@ -139,49 +141,87 @@ def __filter_greater_than(items, attr, value):
     return filtered_items
 
 
-def __form_url(
-        framework,
-        info_type,
-        result_format='xml',
-        region='all',
-        image_state=None,
-        server_type=None,
-        apply_filters=None):
-    """Form the URL for the request"""
-    url_components = []
-    url_components.append(__get_base_url())
-    url_components.append(__get_api_version())
+def __form_url(framework: Optional[str],
+               info_type: str,
+               result_format: str = 'xml',
+               region: str = 'all',
+               image_state: Optional[str] = None,
+               server_type: Optional[str] = None,
+               apply_filters: Optional[Dict[str, Any]] = None) -> str:
+    """
+    Form the URL for the request.
+
+    Args:
+        framework (Optional[str]): The framework to be used.
+        info_type (str): The type of information requested.
+        result_format (str, optional): The format of the result, default is 'xml'.
+        region (str, optional): The region for the request, default is 'all'.
+        image_state (Optional[str], optional): The state of the image, default is None.
+        server_type (Optional[str], optional): The type of the server, default is None.
+        apply_filters (Optional[Dict[str, Any]], optional): Filters to apply, default is None.
+
+    Returns:
+        str: The formed URL.
+    """
+    url_components = [
+        __get_base_url(),
+        __get_api_version()
+    ]
+    
     if framework:
         url_components.append(framework)
-    if region == 'all':
-        region = None
+    
+    region = None if region == 'all' else region
     if region:
         url_components.append(urllib.parse.quote(region))
-    if info_type == 'states':
-        url_components.append('images/states')
-    elif info_type == 'types':
-        url_components.append('servers/types')
-    elif info_type == 'images_version' or info_type == 'servers_version':
-        url_components.append('dataversion')
-    else:
-        url_components.append(info_type)
+    
+    url_components.append(__map_info_type_to_path(info_type))
+    
     doc_type = image_state or server_type
     if doc_type:
         url_components.append(doc_type)
-    url_components[-1] = url_components[-1] + '.json'
-    url = '/'
-    url = url.join(url_components)
     
-    if info_type == 'images_version':
-        query_string = urllib.parse.urlencode({'category': 'images'})
-        url = f"{url}?{query_string}"
-        
-    if info_type == 'servers_version':
-        query_string = urllib.parse.urlencode({'category': 'servers'})
-        url = f"{url}?{query_string}"
-        
+    url_components[-1] += '.json'
+    url = '/'.join(url_components)
+    
+    category_query = __get_category_query(info_type)
+    if category_query:
+        url = f"{url}?{category_query}"
+    
     return url
 
+def __map_info_type_to_path(info_type: str) -> str:
+    """
+    Map the info type to its corresponding path.
+
+    Args:
+        info_type (str): The type of information requested.
+
+    Returns:
+        str: The mapped path for the given info type.
+    """
+    mapping = {
+        'states': 'images/states',
+        'types': 'servers/types',
+        'images_version': 'dataversion',
+        'servers_version': 'dataversion'
+    }
+    return mapping.get(info_type, info_type)
+
+def __get_category_query(info_type: str) -> Optional[str]:
+    """
+    Get the category query string for specific info types.
+
+    Args:
+        info_type (str): The type of information requested.
+
+    Returns:
+        Optional[str]: The query string if applicable, otherwise None.
+    """
+    if info_type in ['images_version', 'servers_version']:
+        category = 'images' if info_type == 'images_version' else 'servers'
+        return urllib.parse.urlencode({'category': category})
+    return None
 
 def __get_api_version():
     """Return the API version to use"""
@@ -276,31 +316,47 @@ def __parse_server_response_data(server_response_data, info_type):
     return json.loads(server_response_data)[info_type]
 
 
-def __reformat(items, info_type, result_format):
+def __reformat(items: Union[List[Dict[str, Any]], str], 
+               info_type: str, 
+               result_format: str) -> str:
+    """
+    Reformat items based on the requested info_type and result_format.
+
+    Args:
+        items (Union[List[Dict[str, Any]], str]): The items to be reformatted.
+        info_type (str): The type of information.
+        result_format (str): The format for the result ('json' or 'xml').
+
+    Returns:
+        str: The reformatted string in the desired format.
+    """
     if result_format == 'json':
         return json.dumps(
             {info_type: items},
             sort_keys=True,
             indent=2,
-            separators=(',', ': '))
-    # default to XML output (until we have a plain formatter)
-    elif info_type == 'servers_version' or info_type == 'images_version':
+            separators=(',', ': ')
+        )
+    
+    if info_type in ['servers_version', 'images_version']:
         root = etree.Element(info_type, attrib={'current_version': items})
         return etree.tostring(
             root,
             xml_declaration=True,
             encoding='UTF-8',
-            pretty_print=True).decode()
-    else:
-        # elif result_format == 'xml':
-        root = etree.Element(info_type)
-        for item in items:
-            etree.SubElement(root, __inflect(info_type), item)
-        return etree.tostring(
-            root,
-            xml_declaration=True,
-            encoding='UTF-8',
-            pretty_print=True).decode()
+            pretty_print=True
+        ).decode()
+    
+    root = etree.Element(info_type)
+    for item in items:
+        etree.SubElement(root, __inflect(info_type), item)
+    return etree.tostring(
+        root,
+        xml_declaration=True,
+        encoding='UTF-8',
+        pretty_print=True
+    ).decode()
+
 
 
 def __warn(str, out=sys.stdout):
@@ -472,5 +528,5 @@ def get_images_version_data(
         server_type=server_type,
         apply_filters=command_arg_filter
     )
-    process =  __process(url, info_type, command_arg_filter, result_format)
-    return process
+    return __process(url, info_type, command_arg_filter, result_format)
+ 

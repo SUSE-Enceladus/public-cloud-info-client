@@ -161,6 +161,8 @@ def __form_url(
         url_components.append('images/states')
     elif info_type == 'types':
         url_components.append('servers/types')
+    elif info_type == 'images_version' or info_type == 'servers_version':
+        url_components.append('dataversion')
     else:
         url_components.append(info_type)
     doc_type = image_state or server_type
@@ -168,7 +170,17 @@ def __form_url(
         url_components.append(doc_type)
     url_components[-1] = url_components[-1] + '.json'
     url = '/'
-    return url.join(url_components)
+    url = url.join(url_components)
+    
+    if info_type == 'images_version':
+        query_string = urllib.parse.urlencode({'category': 'images'})
+        url = f"{url}?{query_string}"
+        
+    if info_type == 'servers_version':
+        query_string = urllib.parse.urlencode({'category': 'servers'})
+        url = f"{url}?{query_string}"
+        
+    return url
 
 
 def __get_api_version():

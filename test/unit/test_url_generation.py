@@ -145,3 +145,27 @@ def test_form_url_regions():
         'https://susepubliccloudinfo.suse.com/v1/'
         'amazon/regions.json')
     assert_equals(expected, url)
+
+def test_form_url_servers_version():
+    """Given the servers_version info_type when forming URL then correctly forms the url with query parameters"""
+    url = ifsrequest.__form_url(
+        'amazon',
+        'servers_version'
+    )
+    expected = (
+       'https://susepubliccloudinfo.suse.com/v1/'
+        'amazon/dataversion.json?category=servers'        
+    )
+    assert_equals(expected, url)
+    
+def test_form_url_images_version():
+    """Given the images_version info_type when forming URL then correctly forms the url with query parameters"""
+    url = ifsrequest.__form_url(
+        'amazon',
+        'images_version'
+    )
+    expected = (
+       'https://susepubliccloudinfo.suse.com/v1/'
+        'amazon/dataversion.json?category=images'        
+    )
+    assert_equals(expected, url)

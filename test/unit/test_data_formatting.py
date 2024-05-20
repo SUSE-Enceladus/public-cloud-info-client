@@ -180,6 +180,17 @@ def test_parse():
     )
     assert_equals(expected, parsed_result)
 
+def test_parse_images_or_servers_version():
+    """Given the json format output of dataversion endpoint when parsing response, should correctly parse json"""
+    expected = '20240520.002'
+    fixture_file = '../data/v1_amazon_dataversion.json'
+    with open(fixture_file, 'r') as fixture:
+        server_response = fixture.read()
+    parsed_result = ifsrequest.__parse_server_response_data(
+        server_response,
+        'images_version'
+    )
+    assert_equals(expected, parsed_result)
 
 def test_reformat_to_json():
     """Spot test reconstituted json string from list of images"""
@@ -201,6 +212,10 @@ def test_reformat_to_json():
     assert '"id": "ami-b97c8ffd"' in result
     assert '"name": "suse-sles-11-sp4-byos-v20150714-pv-ssd-x86_64"' in result
 
+def test_reformat_servers_or_images_version_to_xml():
+    """Given a successful response from dataversion endpoint, should correctly reformat the result to xml"""
+    result = ifsrequest.__reformat('20240520.002', 'servers_version', 'xml')
+    assert '<servers_version current_version="20240520.002"/>' in result
 
 def test_reformat_to_xml():
     """Spot test reconstituted json string from list of images"""

@@ -284,6 +284,13 @@ def __reformat(items, info_type, result_format):
             indent=2,
             separators=(',', ': '))
     # default to XML output (until we have a plain formatter)
+    elif info_type == 'servers_version' or info_type == 'images_version':
+        root = etree.Element(info_type, attrib={'current_version': items})
+        return etree.tostring(
+            root,
+            xml_declaration=True,
+            encoding='UTF-8',
+            pretty_print=True).decode()
     else:
         # elif result_format == 'xml':
         root = etree.Element(info_type)

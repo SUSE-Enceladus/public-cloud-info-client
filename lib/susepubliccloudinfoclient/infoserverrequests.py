@@ -415,3 +415,40 @@ def get_server_data(
         apply_filters=command_arg_filter
     )
     return __process(url, info_type, command_arg_filter, result_format)
+
+def get_servers_version_data(
+        framework,
+        server_type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None
+    ):
+    info_type = 'servers_version'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        server_type=server_type,
+        apply_filters=command_arg_filter
+    )
+    return __process(url, info_type, command_arg_filter, result_format)
+
+def get_images_version_data(
+        framework,
+        server_type,
+        result_format='plain',
+        region='all',
+        command_arg_filter=None
+    ):
+    info_type = 'images_version'
+    url = __form_url(
+        framework,
+        info_type,
+        result_format,
+        region,
+        server_type=server_type,
+        apply_filters=command_arg_filter
+    )
+    process =  __process(url, info_type, command_arg_filter, result_format)
+    return process

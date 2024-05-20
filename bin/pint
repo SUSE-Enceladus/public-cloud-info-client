@@ -39,6 +39,10 @@ usage: pint -h | --help
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
+        pint ({PROVIDERS}) images_version
+          [ --json | --xml ]
+        pint ({PROVIDERS}) servers_version
+          [ --json | --xml ]
        pint -v | --version
 
 options:
@@ -175,6 +179,20 @@ try:
             command_args['--filter']))
     elif command_args['image_states']:
         print(ifsrequest.get_image_states_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    elif command_args['images_version']:
+        print(ifsrequest.get_images_version_data(
+            framework,
+            server_type,
+            output_format,
+            region,
+            command_args['--filter']))
+    elif command_args['servers_version']:
+        print(ifsrequest.get_servers_version_data(
             framework,
             server_type,
             output_format,

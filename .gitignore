@@ -13,6 +13,7 @@ lib64/
 parts/
 sdist/
 var/
+python3-virtualenv/
 *.egg-info/
 .installed.cfg
 *.egg

@@ -9,6 +9,8 @@ pint \- Public-cloud INformation Tracker
 
 .B pint image_states [options]
 
+.B pint dataversion (alibaba|amazon|google|microsoft|oracle) (images|servers)
+
 .B pint 
 .I provider
 .B server_types|regions|images|servers [options]
@@ -54,6 +56,9 @@ The
 command line client provides a convenience tool to access the information
 provided by the information service and provides additional filtering
 capabilities.
+The
+.I pint dataversion
+command provides version of the data store for the specified provider and category (images or servers).
 .SH ARGUMENTS
 .IP "<providers>"
 The
@@ -90,6 +95,10 @@ is retrieved. When the
 .I servers
 argument is provided information about the SUSE operated servers in the
 SUSE maintained update infrastructure is retrieved.
+.IP "<dataversion>"
+The
+.I dataversion
+argument is used to obtain version version of the data store for the specified provider and data type (images or servers). Supported providers are alibaba, amazon, google, microsoft, and oracle.
 .SH OPTIONS
 .IP "<image_state>"
 One of the image states obtained with the
@@ -218,6 +227,14 @@ in the us-west-2 region (Oregon).
 .B pint microsoft images --active --filter="name~priority"
 
 Will provide information about the active 'priority' images in Microsoft Azure.
+
+.B pint dataversion amazon images
+
+Will provide data source version of images for Amazon.
+
+.B pint dataversion google servers
+
+Will provide data source version of servers for Google.
 
 .SH AUTHORS
 SUSE Public Cloud Team (public-cloud-dev@susecloud.net)

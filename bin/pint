@@ -161,7 +161,6 @@ if command_args['--region']:
     region = command_args['--region']
 
 try:
-    print(command_args)
     if command_args['dataversion']:
         print(ifsrequest.get_datasource_version_data(
             framework,

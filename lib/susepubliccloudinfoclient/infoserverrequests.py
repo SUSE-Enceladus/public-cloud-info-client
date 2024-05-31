@@ -165,14 +165,15 @@ def __form_url(
     else:
         url_components.append(info_type)
     if info_type == 'dataversion':
-        url_components.append("category=%s" % requested_category)
-        print(url.components)
+        url_components[-1] += ("?category=%s" % requested_category)
+        url = '/'
+        return url.join(url_components)
+    
     doc_type = image_state or server_type
     if doc_type:
         url_components.append(doc_type)
     url_components[-1] = url_components[-1] + '.json'
     url = '/'
-    print(url.join(url_components))
     return url.join(url_components)
 
 
@@ -426,18 +427,16 @@ def get_datasource_version_data(
         requested_category,
         result_format='json',
         command_arg_filter=None):
-    print("get_datasource_version_data func")
-    print(framework, requested_category, result_format)
     """Return the requested datasource version data"""
     info_type = 'dataversion'
     url = __form_url(
         framework,
         info_type,
         result_format,
-        region='all',
-        image_state=None,
-        server_type=None,
-        apply_filters=command_arg_filter,
+        'all',
+        None,
+        None,
+        command_arg_filter,
         requested_category=requested_category
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __get_data(url)

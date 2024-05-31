@@ -142,7 +142,6 @@ def __filter_greater_than(items, attr, value):
 def __form_url(
         framework,
         info_type,
-        requested_category,
         result_format='xml',
         region='all',
         image_state=None,
@@ -154,8 +153,6 @@ def __form_url(
     url_components.append(__get_api_version())
     if framework:
         url_components.append(framework)
-    if requested_category:
-        url_components.append(requested_category)
     if region == 'all':
         region = None
     if region:
@@ -240,6 +237,8 @@ def __parse_command_arg_filter(command_arg_filter=None):
             r'(?P<attr>deletedon)(?P<operator>[<=>])(?P<value>\d+)$',
         'type':
             r'^(?P<attr>type)(?P<operator>[~!%])(?P<value>.+)$',
+        'category':
+            r'(?P<attr>category)(?P<operator>[<=>])(?P<value>\d+)$',
     }
     # start with empty result set
     filters = []
@@ -424,7 +423,6 @@ def get_datasource_version_data(
         type,
         result_format='json',
         region='all',
-        requested_category,
         command_arg_filter=None):
     """Return the requested datasource version data"""
     info_type = 'dataversion'
@@ -434,7 +432,6 @@ def get_datasource_version_data(
         result_format,
         region,
         type,
-        requested_category,
         apply_filters=command_arg_filter
     )
     return __process(url, info_type, command_arg_filter, result_format)

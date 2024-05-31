@@ -39,7 +39,7 @@ usage: pint -h | --help
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
-       pint ({PROVIDERS}) dataversion ({CATEGORIES})
+       pint dataversion ({PROVIDERS}) ({CATEGORIES})
           [ --json | --xml ]
        pint -v | --version
 
@@ -100,12 +100,12 @@ cloud_providers = []
 for provider in providers['providers']:
     cloud_providers.append(provider['name'])
 
-categories = [images, servers]
+categories = ["images", "servers"]
 
 command_args = docopt(
     __doc__.format(
         PROVIDERS = "|".join(cloud_providers),
-        CATEGORIES = "|".join(categories)
+        CATEGORIES = "|".join(categories),
     ),
     version=version.VERSION
 )
@@ -119,8 +119,9 @@ for csp in cloud_providers:
 requested_category = None
 for category in categories:
     if command_args[category]:
-       requested_category = category
-       break
+        requested_category = category
+        break
+
 
 image_state = None
 image_states_data = ifsrequest.get_image_states_data(
@@ -201,10 +202,9 @@ try:
     elif command_args['dataversion']:
         print(ifsrequest.get_datasource_version_data(
             framework,
-            server_type,
+            requested_category,
             output_format,
             region,
-            requested_category,
             command_args['--filter']))
     else:
         regions = ifsrequest.get_regions_data(

@@ -142,7 +142,7 @@ def __filter_greater_than(items, attr, value):
 def __form_url(
         framework,
         info_type,
-        result_format='xml',
+        result_format,
         region='all',
         image_state=None,
         server_type=None,
@@ -168,6 +168,7 @@ def __form_url(
         url_components.append(doc_type)
     url_components[-1] = url_components[-1] + '.json'
     url = '/'
+    print(url.join(url_components))
     return url.join(url_components)
 
 
@@ -211,7 +212,7 @@ def __inflect(plural):
     inflections = {
         'images': 'image', 'servers': 'server',
         'providers': 'provider', 'states': 'state', 'types': 'type',
-        'regions': 'region'
+        'regions': 'region', 'dataversion': 'dataversion'
     }
     return inflections[plural]
 
@@ -237,8 +238,6 @@ def __parse_command_arg_filter(command_arg_filter=None):
             r'(?P<attr>deletedon)(?P<operator>[<=>])(?P<value>\d+)$',
         'type':
             r'^(?P<attr>type)(?P<operator>[~!%])(?P<value>.+)$',
-        'category':
-            r'(?P<attr>category)(?P<operator>[<=>])(?P<value>\d+)$',
     }
     # start with empty result set
     filters = []
@@ -420,10 +419,11 @@ def get_server_data(
 
 def get_datasource_version_data(
         framework,
-        type,
+        requested_category,
         result_format='json',
         region='all',
         command_arg_filter=None):
+    
     """Return the requested datasource version data"""
     info_type = 'dataversion'
     url = __form_url(
@@ -431,7 +431,6 @@ def get_datasource_version_data(
         info_type,
         result_format,
         region,
-        type,
         apply_filters=command_arg_filter
     )
     return __process(url, info_type, command_arg_filter, result_format)

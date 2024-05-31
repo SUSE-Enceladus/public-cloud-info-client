@@ -278,8 +278,13 @@ def __reformat(items, info_type, result_format):
     else:
         # elif result_format == 'xml':
         root = etree.Element(info_type)
-        for item in items:
-            etree.SubElement(root, __inflect(info_type), item)
+        if info_type != 'dataversion':
+           for item in items:
+             etree.SubElement(root, __inflect(info_type), item)
+        else:
+            for item,value in items.items():
+                sub_element = etree.SubElement(root, item)
+                sub_element.text = str(value)
         return etree.tostring(
             root,
             xml_declaration=True,
@@ -439,4 +444,9 @@ def get_datasource_version_data(
         command_arg_filter,
         requested_category=requested_category
     )
-    return __get_data(url)
+    returned_data = __get_data(url)
+    if result_format == 'xml':
+       returned_data = json.loads(returned_data)
+       return __reformat(returned_data, info_type, result_format)
+    else:
+       return returned_data

@@ -51,7 +51,7 @@ options:
    --deleted
        Only include images which have been deleted
    --deprecated
-       Only include images which are deprecated
+       Only include images which are deprecated, these are deleted 6 months after their "deprecated on" date
        (scheduled for deletion in 6 months)
    --filter=<filter>
        Comma separated list of available attributes

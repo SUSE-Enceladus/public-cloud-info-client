@@ -437,6 +437,3 @@ def get_datasource_version_data(
         requested_category=requested_category
     )
     return __process(url, 'version', command_arg_filter, result_format)
-    #returned_data = __get_data(url)
-    #returned_data = json.loads(returned_data)
-    #return __reformat(returned_data, info_type, result_format)

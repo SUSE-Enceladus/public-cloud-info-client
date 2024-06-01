@@ -138,11 +138,10 @@ def __filter_greater_than(items, attr, value):
     # return the filtered list
     return filtered_items
 
-
 def __form_url(
         framework,
         info_type,
-        result_format,
+        result_format='xml',
         region='all',
         image_state=None,
         server_type=None,
@@ -168,14 +167,12 @@ def __form_url(
         url_components[-1] += ("?category=%s" % requested_category)
         url = '/'
         return url.join(url_components)
-    
     doc_type = image_state or server_type
     if doc_type:
         url_components.append(doc_type)
     url_components[-1] = url_components[-1] + '.json'
     url = '/'
     return url.join(url_components)
-
 
 def __get_api_version():
     """Return the API version to use"""

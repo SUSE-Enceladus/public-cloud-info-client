@@ -151,18 +151,7 @@ def test_form_url_dataversion_servers_xml():
     url = ifsrequest.__form_url('amazon', 'dataversion', result_format='xml', region='all', image_state=None, server_type=None, apply_filters=None, requested_category='servers')
     expected = (
         'https://susepubliccloudinfo.suse.com'
-        '/v1/amazon/dataversion?category=servers'
+        '/v1/amazon/dataversion.json?category=servers'
     )
     assert_equals(expected, url)
 
-def test_reformat_to_xml():
-    """Spot test reconstituted XML string from data version"""
-    data_version = {
-        'version': '20231221.002'
-    }
-    result = ifsrequest.__reformat(data_version, 'dataversion', 'xml')
-    expected_xml = """<?xml version='1.0' encoding='UTF-8'?>
-<dataversion>
-  <version>20231221.002</version>
-</dataversion>"""
-    assert result.strip() == expected_xml.strip()

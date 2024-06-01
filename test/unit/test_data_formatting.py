@@ -225,12 +225,10 @@ def test_reformat_to_xml():
 
 def test_dataversion_reformat_to_xml():
     """Spot test reconstituted XML string from data version"""
-    data_version = {
-        'version': '20231221.002'
-    }
-    result = ifsrequest.__reformat(data_version, 'dataversion', 'xml')
+    version_data = "20231221.002"
+ 
+    result = ifsrequest.__reformat(version_data, 'version', 'xml')
     expected_xml = """<?xml version='1.0' encoding='UTF-8'?>
-<dataversion>
-  <version>20231221.002</version>
-</dataversion>"""
+<version>20231221.002</version>"""
     assert result.strip() == expected_xml.strip()
+

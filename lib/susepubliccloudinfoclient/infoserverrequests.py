@@ -163,14 +163,12 @@ def __form_url(
         url_components.append('servers/types')
     else:
         url_components.append(info_type)
-    if info_type == 'dataversion':
-        url_components[-1] += ("?category=%s" % requested_category)
-        url = '/'
-        return url.join(url_components)
     doc_type = image_state or server_type
     if doc_type:
         url_components.append(doc_type)
     url_components[-1] = url_components[-1] + '.json'
+    if info_type == 'dataversion':
+        url_components[-1] += ("?category=%s" % requested_category)
     url = '/'
     return url.join(url_components)
 
@@ -214,7 +212,7 @@ def __inflect(plural):
     inflections = {
         'images': 'image', 'servers': 'server',
         'providers': 'provider', 'states': 'state', 'types': 'type',
-        'regions': 'region', 'dataversion': 'dataversion'
+        'regions': 'region', 'version': 'version'
     }
     return inflections[plural]
 
@@ -263,7 +261,6 @@ def __parse_command_arg_filter(command_arg_filter=None):
 def __parse_server_response_data(server_response_data, info_type):
     return json.loads(server_response_data)[info_type]
 
-
 def __reformat(items, info_type, result_format):
     if result_format == 'json':
         return json.dumps(
@@ -275,13 +272,11 @@ def __reformat(items, info_type, result_format):
     else:
         # elif result_format == 'xml':
         root = etree.Element(info_type)
-        if info_type != 'dataversion':
+        if info_type != 'version':
            for item in items:
              etree.SubElement(root, __inflect(info_type), item)
         else:
-            for item,value in items.items():
-                sub_element = etree.SubElement(root, item)
-                sub_element.text = str(value)
+             root.text = str(items)
         return etree.tostring(
             root,
             xml_declaration=True,
@@ -441,9 +436,7 @@ def get_datasource_version_data(
         command_arg_filter,
         requested_category=requested_category
     )
-    returned_data = __get_data(url)
-    if result_format == 'xml':
-       returned_data = json.loads(returned_data)
-       return __reformat(returned_data, info_type, result_format)
-    else:
-       return returned_data
+    return __process(url, 'version', command_arg_filter, result_format)
+    #returned_data = __get_data(url)
+    #returned_data = json.loads(returned_data)
+    #return __reformat(returned_data, info_type, result_format)

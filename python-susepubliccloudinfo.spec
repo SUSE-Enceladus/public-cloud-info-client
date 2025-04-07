@@ -1,5 +1,5 @@
 #
-# spec file for package python3-susepubliccloudinfo
+# spec file for package python-susepubliccloudinfo
 #
 # Copyright (c) 2019 SUSE LINUX GmbH, Nuernberg, Germany.
 #
@@ -15,27 +15,35 @@
 # Please submit bugfixes or comments via https://bugs.opensuse.org/
 #
 
+%if 0%{?suse_version} >= 1600
+%define pythons %{primary_python}
+%else
+%{?sle15_python_module_pythons}
+%endif
+%global _sitelibdir %{%{pythons}_sitelib}
 
 %define upstream_name susepubliccloudinfo
-Name:           python3-susepubliccloudinfo
-Version:        1.4.0
+Name:           python-susepubliccloudinfo
+Version:        1.4.1
 Release:        0
 Summary:        Query SUSE Public Cloud Info Service
 License:        GPL-3.0-or-later
 Group:          System/Management
 Url:            https://github.com/SUSE-Enceladus/public-cloud-info-client
 Source0:        %{upstream_name}-%{version}.tar.bz2
-Requires:       python3
-Requires:       python3-docopt
-Requires:       python3-lxml
-Requires:       python3-requests
-BuildRequires:  python3-setuptools
+Requires:       python
+Requires:       python-docopt
+Requires:       python-lxml
+Requires:       python-requests
+BuildRequires:  %{pythons}-pip
+BuildRequires:  %{pythons}-setuptools
+BuildRequires:  %{pythons}-wheel
+BuildRequires:  fdupes
 BuildRequires:  python-rpm-macros
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
 
-Provides:       python-susepubliccloudinfo = %{version}
-Obsoletes:      python-susepubliccloudinfo < %{version}
+Obsoletes:      python3-susepubliccloudinfo < %{version}
 
 %description
 Query the SUSE Public Cloud Information Service REST API
@@ -44,20 +52,20 @@ Query the SUSE Public Cloud Information Service REST API
 %setup -q -n %{upstream_name}-%{version}
 
 %build
-python3 setup.py build
+%pyproject_wheel
 
 %install
-python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
+%pyproject_install
 install -d -m 755 %{buildroot}/%{_mandir}/man1
 install -m 644 man/man1/pint.1 %{buildroot}/%{_mandir}/man1
-gzip %{buildroot}/%{_mandir}/man1/pint.1
+%fdupes %{buildroot}%{$python_sitelib}
 
 %files
 %defattr(-,root,root,-)
 %license LICENSE
-%{_mandir}/man1/*
-%dir %{python3_sitelib}/susepubliccloudinfoclient
-%{python3_sitelib}/*
 %{_bindir}/pint
+%{_mandir}/man1/*
+%dir %{_sitelibdir}/susepubliccloudinfoclient
+%{_sitelibdir}/*
 
 %changelog

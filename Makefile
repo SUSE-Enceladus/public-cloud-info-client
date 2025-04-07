@@ -27,7 +27,7 @@ tar:  clean
 	rm -rf "$(NAME)-$(verSrc)"
 
 install:
-	python setup.py install --prefix="$(PREFIX)" --root="$(DESTDIR)"
+	python3 setup.py install --prefix="$(PREFIX)" --root="$(DESTDIR)"
 	install -d -m 755 "$(DESTDIR)"/"$(MANDIR)"/man1
 	install -m 644 man/man1/pint.1 "$(DESTDIR)"/"$(MANDIR)"/man1
 	gzip "$(DESTDIR)"/"$(MANDIR)"/man1/pint.1

@@ -3,4 +3,5 @@
 bumpversion
 coverage
 pycodestyle
-nose
+pytest
+pytest-cov

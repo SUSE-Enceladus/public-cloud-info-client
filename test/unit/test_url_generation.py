@@ -20,23 +20,22 @@
 #
 
 import lib.susepubliccloudinfoclient.infoserverrequests as ifsrequest
-from nose.tools import assert_equals
 
 
 def test_api_version():
-    assert_equals('v1', ifsrequest.__get_api_version())
+    assert 'v1' == ifsrequest.__get_api_version()
 
 
 def test_get_base_url():
     expected = 'https://susepubliccloudinfo.suse.com'
-    assert_equals(expected, ifsrequest.__get_base_url())
+    assert expected == ifsrequest.__get_base_url()
 
 
 def test_form_url_servers_all_json():
     """Form the URL for all servers in JSON format"""
     url = ifsrequest.__form_url('amazon', 'servers', 'json')
     expected = 'https://susepubliccloudinfo.suse.com/v1/amazon/servers.json'
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_servers_smt_xml():
@@ -47,7 +46,7 @@ def test_form_url_servers_smt_xml():
         'https://susepubliccloudinfo.suse.com'
         '/v1/google/servers/smt.json'
     )
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_images_active_region_json():
@@ -60,7 +59,7 @@ def test_form_url_images_active_region_json():
         image_state='active')
     expected = 'https://susepubliccloudinfo.suse.com/v1/'
     expected += 'amazon/us-east-1/images/active.json'
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_images_inactive():
@@ -72,7 +71,7 @@ def test_form_url_images_inactive():
     expected = (
         'https://susepubliccloudinfo.suse.com/v1/'
         'microsoft/images/inactive.json')
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_images_all_xml():
@@ -80,7 +79,7 @@ def test_form_url_images_all_xml():
     url = ifsrequest.__form_url('google', 'images')
     # all requests are in JSON, regardless of output format
     expected = 'https://susepubliccloudinfo.suse.com/v1/google/images.json'
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_region_is_url_quoted():
@@ -90,7 +89,7 @@ def test_region_is_url_quoted():
         'https://susepubliccloudinfo.suse.com'
         '/v1/microsoft/West%20US/images.json'
     )
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_all_frameworks():
@@ -102,7 +101,7 @@ def test_all_frameworks():
             'https://susepubliccloudinfo.suse.com'
             '/v1/' + framework + '/dummy/images.json'
         )
-        assert_equals(expected, url)
+        assert expected == url
 
 
 def test_form_url_providers_xml():
@@ -113,7 +112,7 @@ def test_form_url_providers_xml():
         'https://susepubliccloudinfo.suse.com'
         '/v1/providers.json'
     )
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_images_states():
@@ -122,7 +121,7 @@ def test_form_url_images_states():
     expected = (
         'https://susepubliccloudinfo.suse.com/v1/'
         'images/states.json')
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_servers_types():
@@ -133,7 +132,7 @@ def test_form_url_servers_types():
     expected = (
         'https://susepubliccloudinfo.suse.com/v1/'
         'microsoft/servers/types.json')
-    assert_equals(expected, url)
+    assert expected == url
 
 
 def test_form_url_regions():
@@ -144,4 +143,4 @@ def test_form_url_regions():
     expected = (
         'https://susepubliccloudinfo.suse.com/v1/'
         'amazon/regions.json')
-    assert_equals(expected, url)
+    assert expected == url

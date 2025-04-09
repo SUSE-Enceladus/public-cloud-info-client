@@ -22,7 +22,6 @@
 import lib.susepubliccloudinfoclient.infoserverrequests as ifsrequest
 import json
 from unittest.mock import patch
-from nose.tools import assert_equals, assert_false
 
 
 @patch('lib.susepubliccloudinfoclient.infoserverrequests.__warn')
@@ -45,8 +44,8 @@ def test_valid_image_keys_from_filter(mock_warn):
         'deletedon'
 
     ]
-    assert_equals(expected.sort(), [item['attr'] for item in filters].sort())
-    assert_false(mock_warn.called, "warn() should not be called")
+    assert expected.sort() == [item['attr'] for item in filters].sort()
+    assert not mock_warn.called
 
 
 @patch('lib.susepubliccloudinfoclient.infoserverrequests.__warn')
@@ -56,8 +55,8 @@ def test_valid_server_keys_from_filter(mock_warn):
     filter_arg = 'name~foo,ip=0.0.0.0'
     filters = ifsrequest.__parse_command_arg_filter(filter_arg)
     expected = ['name', 'ip']
-    assert_equals(expected.sort(), [item['attr'] for item in filters].sort())
-    assert_false(mock_warn.called, "warn() should not be called")
+    assert expected.sort() == [item['attr'] for item in filters].sort()
+    assert not mock_warn.called
 
 
 @patch('lib.susepubliccloudinfoclient.infoserverrequests.__warn')
@@ -93,7 +92,7 @@ def test_filter_exact():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_substring():
@@ -130,7 +129,7 @@ def test_filter_substring():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_substring_is_case_insensitive():
@@ -167,7 +166,7 @@ def test_filter_substring_is_case_insensitive():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_less_than():
@@ -186,7 +185,7 @@ def test_filter_less_than():
         "ami-b95b4ffc",
         "ami-557a6e10"
     ]
-    assert_equals(expected_ids, [item['id'] for item in filtered_result])
+    assert expected_ids == [item['id'] for item in filtered_result]
 
 
 def test_filter_greater_than():
@@ -207,7 +206,7 @@ def test_filter_greater_than():
         "ami-8d689bc9",
         "ami-d56e9d91"
     ]
-    assert_equals(expected_ids, [item['id'] for item in filtered_result])
+    assert expected_ids == [item['id'] for item in filtered_result]
 
 
 def test_filter_images_on_id():
@@ -229,7 +228,7 @@ def test_filter_images_on_id():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_images_on_name():
@@ -262,7 +261,7 @@ def test_filter_images_on_name():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_servers_on_type_substring():
@@ -279,7 +278,7 @@ def test_filter_servers_on_type_substring():
             'region': 'us-east-1'
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_images_on_publishedon():
@@ -302,7 +301,7 @@ def test_filter_images_on_publishedon():
             'deletedon': ''
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_images_on_publishedon_less_than():
@@ -317,7 +316,7 @@ def test_filter_images_on_publishedon_less_than():
         "ami-b95b4ffc",
         "ami-557a6e10"
     ]
-    assert_equals(expected_ids, [item['id'] for item in filtered_result])
+    assert expected_ids == [item['id'] for item in filtered_result]
 
 
 def test_filter_images_on_publishedon_greater_than():
@@ -334,7 +333,7 @@ def test_filter_images_on_publishedon_greater_than():
         "ami-8d689bc9",
         "ami-d56e9d91"
     ]
-    assert_equals(expected_ids, [item['id'] for item in filtered_result])
+    assert expected_ids == [item['id'] for item in filtered_result]
 
 
 def test_filter_not_substring():
@@ -393,7 +392,7 @@ def test_filter_not_substring():
             'state': 'active'
         }
     ]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result
 
 
 def test_filter_regex():
@@ -417,4 +416,4 @@ def test_filter_regex():
         'replacementname': '',
         'state': 'active'
     }]
-    assert_equals(expected, filtered_result)
+    assert expected == filtered_result

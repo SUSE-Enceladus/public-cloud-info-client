@@ -20,7 +20,6 @@
 #
 
 import lib.susepubliccloudinfoclient.infoserverrequests as ifsrequest
-from nose.tools import assert_equals
 
 
 def test_parse():
@@ -178,7 +177,7 @@ def test_parse():
         server_response,
         'images'
     )
-    assert_equals(expected, parsed_result)
+    assert expected == parsed_result
 
 
 def test_reformat_to_json():

@@ -22,7 +22,7 @@
 import lib.susepubliccloudinfoclient.infoserverrequests as ifsrequest
 import requests
 from unittest.mock import patch
-from nose.tools import raises
+from pytest import raises
 from io import StringIO
 
 
@@ -31,15 +31,15 @@ def test_warn_includes_warning():
 
     out = StringIO()
     ifsrequest.__warn("test", out)
-    assert('Warning:' in out.getvalue())
+    assert 'Warning:' in out.getvalue()
 
 
-@raises(LookupError)
 def test_errr_includes_error():
     """The point of error is to say so"""
     out = StringIO()
-    ifsrequest.__error("test", out)
-    assert('Error:' in out.getvalue())
+    with raises(LookupError):
+        ifsrequest.__error("test", out)
+    assert 'Error:' in out.getvalue()
 
 
 @patch('lib.susepubliccloudinfoclient.infoserverrequests.requests.get')

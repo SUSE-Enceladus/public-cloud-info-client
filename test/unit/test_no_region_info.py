@@ -25,7 +25,8 @@ import lib.susepubliccloudinfoclient.infoserverrequests as ifsrequest
 def test_global_images_no_regions():
     """Returns empty list for no regions"""
     region_data = '{\n  "regions": []\n}'
-    result = ifsrequest.get_regions_data('oracle', None, 'json', 'all', None)
+    result = ifsrequest.get_regions_data(
+        'oracle', None, 'json', 'all', 'bz2', None)
     assert result == region_data
 
 
@@ -33,6 +34,6 @@ def test_images_no_data():
     """Returns empty list for no images"""
     image_data = '{\n  "images": []\n}'
     result = ifsrequest.get_image_data(
-        'amazon', None, 'json', 'us-east-1', 'name~foo'
+        'amazon', None, 'json', 'us-east-1', 'bz2', 'name~foo'
     )
     assert result == image_data

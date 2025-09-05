@@ -46,5 +46,5 @@ def test_errr_includes_error():
 @patch('lib.susepubliccloudinfoclient.infoserverrequests.__error')
 def test_connection_error(mock_error, mock_get):
     mock_get.side_effect = requests.ConnectionError("Whoops!")
-    ifsrequest.__get_data('http://foo.de.bar')
+    ifsrequest.__get_data('http://foo.de.bar', 'bz2')
     assert mock_error.called

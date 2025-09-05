@@ -23,6 +23,10 @@ import re
 import requests
 import sys
 import urllib
+import gzip
+import bz2
+import lzma
+import io
 from lxml import etree
 
 
@@ -179,13 +183,19 @@ def __get_api_version():
 def __get_base_url():
     """Return the base url for the information service"""
     return 'https://susepubliccloudinfo.suse.com'
-    # return 'http://localhost:9292'
 
 
-def __get_data(url):
+def __get_data(url, transfer_compression):
     """Make the request and return the data or None in case of failure"""
     try:
-        response = requests.get(url)
+        # Check for transfer compression type
+        if transfer_compression == 'bz2':
+            custom_header = {'Accept-Encoding': 'bzip2'}
+        elif transfer_compression == 'gzip':
+            custom_header = {'Accept-Encoding': 'gzip'}
+        else:
+            custom_header = {'Accept-Encoding': 'xz'}
+        response = requests.get(url, headers=custom_header)
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         __error("The server responded with an error.\n%s" % e)
@@ -204,7 +214,24 @@ def __get_data(url):
         __error(e)
     else:
         assert response.text, "No data was returned by the server!"
-        return response.text
+        content_encoding = response.headers.get('Content-Encoding')
+        if content_encoding:
+            if 'gzip' in content_encoding:
+                decompressed_data = response.text
+            elif 'bzip2' in content_encoding:
+                decompressed_data = bz2.decompress(
+                    response.content).decode("utf-8")
+            elif 'lzma' in content_encoding:
+                decompressed_data = lzma.decompress(
+                    response.content).decode("utf-8")
+            else:
+                print('Unknown "Content-Encoding" header received "%s",'
+                      'attempt to treat data as uncompressed'
+                      % content_encoding, file=sys.stderr)
+                decompressed_data = response.text
+        else:
+            decompressed_data = response.text
+        return decompressed_data
 
 
 def __inflect(plural):
@@ -290,12 +317,13 @@ def __error(str, out=sys.stderr):
     raise LookupError(str)
 
 
-def __process(url, info_type, command_arg_filter, result_format):
+def __process(url, info_type, command_arg_filter,
+              result_format, transfer_compression):
     """
         given a URL, the type of information, maybe some filters, and an
         expected format, do the right thing
     """
-    server_response_data = __get_data(url)
+    server_response_data = __get_data(url, transfer_compression)
     resultset = __parse_server_response_data(server_response_data, info_type)
     if command_arg_filter:
         filters = __parse_command_arg_filter(command_arg_filter)
@@ -308,7 +336,8 @@ def get_provider_data(
         type,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested providers information"""
     info_type = 'providers'
     url = __form_url(
@@ -319,7 +348,8 @@ def get_provider_data(
         type,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)
 
 
 def get_image_states_data(
@@ -327,7 +357,8 @@ def get_image_states_data(
         type,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested image states information"""
     info_type = 'states'
     url = __form_url(
@@ -338,7 +369,8 @@ def get_image_states_data(
         type,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)
 
 
 def get_server_types_data(
@@ -346,7 +378,8 @@ def get_server_types_data(
         type,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested server types information"""
     info_type = 'types'
     url = __form_url(
@@ -357,7 +390,8 @@ def get_server_types_data(
         type,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)
 
 
 def get_regions_data(
@@ -365,7 +399,8 @@ def get_regions_data(
         type,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested regions information"""
     info_type = 'regions'
     url = __form_url(
@@ -376,7 +411,8 @@ def get_regions_data(
         type,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)
 
 
 def get_image_data(
@@ -384,7 +420,8 @@ def get_image_data(
         image_state,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested image information"""
     info_type = 'images'
     url = __form_url(
@@ -395,7 +432,8 @@ def get_image_data(
         image_state,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)
 
 
 def get_server_data(
@@ -403,7 +441,8 @@ def get_server_data(
         server_type,
         result_format='plain',
         region='all',
-        command_arg_filter=None):
+        command_arg_filter=None,
+        transfer_compression='bz2'):
     """Return the requested server information"""
     info_type = 'servers'
     url = __form_url(
@@ -414,4 +453,5 @@ def get_server_data(
         server_type=server_type,
         apply_filters=command_arg_filter
     )
-    return __process(url, info_type, command_arg_filter, result_format)
+    return __process(url, info_type, command_arg_filter,
+                     result_format, transfer_compression)

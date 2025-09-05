@@ -202,6 +202,14 @@ option is only valid when used with the
 .I servers
 argument. It provides information about the SMT (update) servers operated
 and maintained by SUSE.
+.IP "--bz2"
+This option uses compression type bz2 to compress the data over the network. 
+This option is mutually exclusive with the
+.I --gzip 
+and
+.I --xz
+option. bz2 is the default option if none of the three compression 
+types ( bz2, gzip, xz ) is provided
 .IP "-v --version"
 Print the current version of the program
 .SH EXAMPLE

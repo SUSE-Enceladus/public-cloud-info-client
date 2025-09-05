@@ -22,23 +22,29 @@
 usage: pint -h | --help
        pint providers
           [ --json | --xml ]
+          [ --bz2 | --gzip | --xz ]
        pint image_states
           [ --json | --xml ]
-       pint ({PROVIDERS}) server_types 
+          [ --bz2 | --gzip | --xz ]
+       pint ({PROVIDERS}) server_types
           [ --json | --xml ]
+          [ --bz2 | --gzip | --xz ]
        pint ({PROVIDERS}) regions
           [ --filter=<filter> ]
           [ --json | --xml ]
+          [ --bz2 | --gzip | --xz ]
        pint ({PROVIDERS}) servers
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
           [ --smt | --regionserver ]
+          [ --bz2 | --gzip | --xz ]
        pint ({PROVIDERS}) images
           [ --active | --inactive | --deleted | --deprecated ]
           [ --filter=<filter> ]
           [ --json | --xml ]
           [ --region=<region> ]
+          [ --bz2 | --gzip | --xz ]
        pint -v | --version
 
 options:
@@ -67,10 +73,16 @@ options:
        Provide only SMT Server information
    --xml
        Output data in XML format
+   --bz2
+       Use Compression type bz2 to send compressed data over network (Default)
+   --gzip
+       Use Compression type gzip to send compressed data over network
+   --xz
+       Use Compression type xz to send compressed data over network
    -v --version
        Show program version
 
-For Additional help run `man pint` to view the man page       
+For Additional help run `man pint` to view the man page
 """
 
 import json
@@ -100,7 +112,7 @@ for provider in providers['providers']:
 
 command_args = docopt(
     __doc__.format(
-        PROVIDERS = "|".join(cloud_providers)
+        PROVIDERS="|".join(cloud_providers)
     ),
     version=version.VERSION
 )
@@ -148,6 +160,13 @@ region = 'all'
 if command_args['--region']:
     region = command_args['--region']
 
+transfer_compression = 'bz2'
+compression_types = ('bz2', 'gzip', 'xz')
+for comptype in compression_types:
+    if command_args['--%s' % comptype]:
+        transfer_compression = comptype
+        break
+
 try:
     if command_args['images']:
         data = ifsrequest.get_image_data(
@@ -155,7 +174,8 @@ try:
             image_state,
             output_format,
             region,
-            command_args['--filter'])
+            command_args['--filter'],
+            transfer_compression)
         if '<images/>' in data or '"images": []' in data:
             data = 'No information available. Please check your filter'
         print(data)
@@ -165,39 +185,44 @@ try:
             server_type,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'],
+            transfer_compression))
     elif command_args['providers']:
         print(ifsrequest.get_provider_data(
             framework,
             server_type,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'],
+            transfer_compression))
     elif command_args['image_states']:
         print(ifsrequest.get_image_states_data(
             framework,
             server_type,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'],
+            transfer_compression))
     elif command_args['server_types']:
         print(ifsrequest.get_server_types_data(
             framework,
             server_type,
             output_format,
             region,
-            command_args['--filter']))
+            command_args['--filter'],
+            transfer_compression))
     else:
         regions = ifsrequest.get_regions_data(
             framework,
             server_type,
             output_format,
             region,
-            command_args['--filter'])
+            command_args['--filter'],
+            transfer_compression)
         if '<regions/>' in regions or '"regions": []' in regions:
             regions = ('No region information available. Images have '
                        'the same identifier in all regions')
         print(regions)
-            
+
 except Exception:
     sys.exit(1)
